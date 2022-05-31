@@ -11,18 +11,7 @@ from .models import Super
 from supers import serializers
 
 # Create your views here.
-@api_view(['GET'])
-def type_dict(request):
-  if  request.method == 'GET':
-    types = Super_type.objects.all()
-    custom_response_dictionary ={}
-    for type in types:
-     super = Super.objects.filter(type_id=type.id)
-     type_serializer = SuperSerializer(super, many=True)
-     custom_response_dictionary[type.type] = {
-         'type': type_serializer.data
-     }
-    return Response(custom_response_dictionary)
+
 
 
 
@@ -30,7 +19,16 @@ def type_dict(request):
 
 @api_view(['GET','POST'])
 def super_list(request):
-    
+    if  request.method == 'GET':
+        types = Super_type.objects.all()
+        custom_response_dictionary ={}
+        for type in types:
+          super = Super.objects.filter(super_type__id=type.id)
+          type_serializer = SuperSerializer(super, many=True)
+          custom_response_dictionary[type.type] = {
+          'type': type_serializer.data
+          }
+        return Response(custom_response_dictionary)
     if  request.method == 'GET':
       
       super_company= request.query_params.get('type')
